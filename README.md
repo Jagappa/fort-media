@@ -157,7 +157,27 @@ MONGODB_URI=mongodb://localhost:27017/fort-media
 JWT_SECRET=your-super-secret-key
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=http://localhost:5173
+
+# Cloudinary — media storage
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_FOLDER=fort-media
 ```
+
+### Media storage
+
+Uploads go to Cloudinary when all three of `CLOUDINARY_CLOUD_NAME`,
+`CLOUDINARY_API_KEY` and `CLOUDINARY_API_SECRET` are set, and the full
+`https://` URL is stored in MongoDB. With any of them missing, files are
+written to `backend/uploads` instead, so local development needs no
+Cloudinary account. The server logs which mode is active on boot.
+
+**Setting these in production is not optional.** Render's free plan gives
+the service an ephemeral filesystem: everything under `backend/uploads` is
+erased on every restart, redeploy and wake from sleep, while the database
+keeps pointing at paths that no longer exist — which is exactly how
+uploaded media silently turns into broken images.
 
 ---
 

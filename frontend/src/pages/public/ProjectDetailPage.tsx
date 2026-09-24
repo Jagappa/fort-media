@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { publicAPI } from '../../api';
+import { publicAPI, mediaUrl } from '../../api';
 import { useLang } from '../../context/LanguageContext';
 
 const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
@@ -24,7 +24,7 @@ export default function ProjectDetailPage() {
 
   if (!project) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', fontFamily: 'var(--font-display)', fontSize: 24, letterSpacing: '.1em' }}>LOADING...</div>;
 
-  const logoUrl = brand.logo || '/fort-media-logo.png';
+  const logoUrl = brand.logo ? mediaUrl(brand.logo) : '/fort-media-logo.png';
 
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
@@ -45,7 +45,7 @@ export default function ProjectDetailPage() {
 
         {project.coverImage && (
           <FadeIn delay={.25}><div style={{ width: '100%', aspectRatio: '21/9', overflow: 'hidden', marginBottom: 48 }}>
-            <img src={project.coverImage} alt={t(project.title)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={mediaUrl(project.coverImage)} alt={t(project.title)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div></FadeIn>
         )}
 
@@ -53,7 +53,7 @@ export default function ProjectDetailPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16, marginBottom: 60 }}>
             {project.images.map((img: string, i: number) => (
               <FadeIn key={i} delay={i * .05}><div style={{ width: '100%', aspectRatio: '4/3', overflow: 'hidden' }}>
-                <img src={img} alt={`${t(project.title)} ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={mediaUrl(img)} alt={`${t(project.title)} ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div></FadeIn>
             ))}
           </div>

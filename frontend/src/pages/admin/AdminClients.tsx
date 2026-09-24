@@ -1,6 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { adminAPI } from '../../api';
+import { adminAPI, mediaUrl } from '../../api';
 import toast from 'react-hot-toast';
 
 export default function AdminClients() {
@@ -69,7 +69,7 @@ export default function AdminClients() {
         <tbody>
           {clients.map(c => (
             <tr key={c._id}>
-              <td>{c.logo ? <img src={c.logo} style={{ height: 36, maxWidth: 80, objectFit: 'contain' }} alt="" /> : <span style={{ color: 'var(--gray-dark)' }}>No logo</span>}</td>
+              <td>{c.logo ? <img src={mediaUrl(c.logo)} style={{ height: 36, maxWidth: 80, objectFit: 'contain' }} alt="" /> : <span style={{ color: 'var(--gray-dark)' }}>No logo</span>}</td>
               <td style={{ color: 'var(--white)' }}>{c.name}</td>
               <td><span className={`badge ${c.isActive ? 'badge-green' : 'badge-red'}`}>{c.isActive ? 'Active' : 'Hidden'}</span></td>
               <td><div className="admin-actions">

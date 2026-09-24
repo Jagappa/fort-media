@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { publicAPI } from '../../api';
+import { publicAPI, mediaUrl } from '../../api';
 import { useLang } from '../../context/LanguageContext';
 
 const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
@@ -29,7 +29,7 @@ export default function QuickShootDetailPage() {
     window.scrollTo(0, 0);
   }, [id]);
 
-  const logoUrl = brand.logo || '/fort-media-logo.png';
+  const logoUrl = brand.logo ? mediaUrl(brand.logo) : '/fort-media-logo.png';
 
   if (!qs) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', fontFamily: 'var(--font-display)', fontSize: 24 }}>LOADING...</div>;
 
@@ -61,7 +61,7 @@ export default function QuickShootDetailPage() {
               <FadeIn key={v._id} delay={i * .08}>
                 <div style={{ background: 'var(--card)', border: '1px solid var(--border)', overflow: 'hidden' }}>
                   <div style={{ width: '100%', aspectRatio: '9/16', background: '#000' }}>
-                    <video src={v.videoFile} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <video src={mediaUrl(v.videoFile)} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <div style={{ padding: '14px 16px' }}>
                     <div style={{ fontSize: 14, fontWeight: 600 }}>{v.title || 'Video'}</div>

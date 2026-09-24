@@ -1,6 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { adminAPI } from '../../api';
+import { adminAPI, mediaUrl } from '../../api';
 import toast from 'react-hot-toast';
 
 export default function AdminQuickShoots() {
@@ -122,7 +122,7 @@ export default function AdminQuickShoots() {
             {videos.map((v, i) => (
               <tr key={v._id}>
                 <td>{i + 1}</td>
-                <td>{v.videoFile && <video src={v.videoFile} style={{ width: 100, height: 56, objectFit: 'cover', background: '#000' }} />}</td>
+                <td>{v.videoFile && <video src={mediaUrl(v.videoFile)} style={{ width: 100, height: 56, objectFit: 'cover', background: '#000' }} />}</td>
                 <td style={{ color: 'var(--white)' }}>{v.title || 'Untitled'}</td>
                 <td><span className={`badge ${v.isActive ? 'badge-green' : 'badge-red'}`}>{v.isActive ? 'Active' : 'Hidden'}</span></td>
                 <td><div className="admin-actions">

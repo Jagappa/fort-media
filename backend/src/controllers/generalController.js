@@ -1,3 +1,4 @@
+const { fileUrl } = require('../middleware/upload');
 const HomePage = require('../models/HomePage');
 const QuickShoot = require('../models/QuickShoot');
 const QuickShootVideo = require('../models/QuickShootVideo');
@@ -25,7 +26,7 @@ exports.uploadHomeVideo = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ message: 'Please select a video file.' });
     const video = await HomePage.create({
-      videoFile: '/uploads/' + req.file.filename,
+      videoFile: fileUrl(req.file),
       videoType: 'upload',
       title: req.body.title || req.file.originalname,
       isActive: false,
@@ -40,7 +41,7 @@ exports.uploadHomeVideo = async (req, res) => {
 exports.updateHomeVideo = async (req, res) => {
   try {
     const update = {};
-    if (req.file) update.videoFile = '/uploads/' + req.file.filename;
+    if (req.file) update.videoFile = fileUrl(req.file);
     if (req.body.isActive === 'true' || req.body.isActive === true) {
       await HomePage.updateMany({}, { isActive: false });
       update.isActive = true;
@@ -79,7 +80,7 @@ exports.createQuickShoot = async (req, res) => {
       isActive: req.body.isActive !== 'false',
     };
     if (!data.slug) data.slug = (req.body.nameEn || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    if (req.file) data.image = '/uploads/' + req.file.filename;
+    if (req.file) data.image = fileUrl(req.file);
     res.status(201).json(await QuickShoot.create(data));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -91,7 +92,7 @@ exports.updateQuickShoot = async (req, res) => {
     if (req.body.descEn !== undefined) update.description = { en: req.body.descEn, kn: req.body.descKn || '' };
     if (req.body.displayOrder !== undefined) update.displayOrder = Number(req.body.displayOrder);
     if (req.body.isActive !== undefined) update.isActive = req.body.isActive === 'true' || req.body.isActive === true;
-    if (req.file) update.image = '/uploads/' + req.file.filename;
+    if (req.file) update.image = fileUrl(req.file);
     res.json(await QuickShoot.findByIdAndUpdate(req.params.id, update, { new: true }));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -125,7 +126,7 @@ exports.addQuickShootVideo = async (req, res) => {
     const video = await QuickShootVideo.create({
       quickShoot: req.params.quickShootId,
       title: req.body.title || 'Untitled',
-      videoFile: '/uploads/' + req.file.filename,
+      videoFile: fileUrl(req.file),
       displayOrder: Number(req.body.displayOrder) || 0,
       isActive: true,
     });
@@ -142,7 +143,7 @@ exports.updateQuickShootVideo = async (req, res) => {
     if (req.body.title) update.title = req.body.title;
     if (req.body.isActive !== undefined) update.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     if (req.body.displayOrder !== undefined) update.displayOrder = Number(req.body.displayOrder);
-    if (req.file) update.videoFile = '/uploads/' + req.file.filename;
+    if (req.file) update.videoFile = fileUrl(req.file);
     res.json(await QuickShootVideo.findByIdAndUpdate(req.params.videoId, update, { new: true }));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -168,7 +169,7 @@ exports.getAllPartners = async (req, res) => {
 exports.createPartner = async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.logo = '/uploads/' + req.file.filename;
+    if (req.file) data.logo = fileUrl(req.file);
     res.status(201).json(await ProjectPartner.create(data));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -176,7 +177,7 @@ exports.createPartner = async (req, res) => {
 exports.updatePartner = async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.logo = '/uploads/' + req.file.filename;
+    if (req.file) data.logo = fileUrl(req.file);
     if (data.isActive !== undefined) data.isActive = data.isActive === 'true' || data.isActive === true;
     res.json(await ProjectPartner.findByIdAndUpdate(req.params.id, data, { new: true }));
   } catch (e) { res.status(500).json({ message: e.message }); }
@@ -241,7 +242,7 @@ exports.createClient = async (req, res) => {
       displayOrder: Number(req.body.displayOrder) || 0,
       isActive: req.body.isActive !== 'false',
     };
-    if (req.file) data.logo = '/uploads/' + req.file.filename;
+    if (req.file) data.logo = fileUrl(req.file);
     res.status(201).json(await Client.create(data));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -254,7 +255,7 @@ exports.updateClient = async (req, res) => {
     if (req.body.displayOrder !== undefined) data.displayOrder = Number(req.body.displayOrder);
     if (req.body.isActive !== undefined) data.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     if (req.body.isFeatured !== undefined) data.isFeatured = req.body.isFeatured === 'true' || req.body.isFeatured === true;
-    if (req.file) data.logo = '/uploads/' + req.file.filename;
+    if (req.file) data.logo = fileUrl(req.file);
     res.json(await Client.findByIdAndUpdate(req.params.id, data, { new: true }));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -284,7 +285,7 @@ exports.createTestimonial = async (req, res) => {
       rating: Number(req.body.rating) || 5,
       isActive: req.body.isActive !== 'false',
     };
-    if (req.file) data.profileImage = '/uploads/' + req.file.filename;
+    if (req.file) data.profileImage = fileUrl(req.file);
     res.status(201).json(await Testimonial.create(data));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -298,7 +299,7 @@ exports.updateTestimonial = async (req, res) => {
     if (req.body.rating) data.rating = Number(req.body.rating);
     if (req.body.isActive !== undefined) data.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     if (req.body.isFeatured !== undefined) data.isFeatured = req.body.isFeatured === 'true' || req.body.isFeatured === true;
-    if (req.file) data.profileImage = '/uploads/' + req.file.filename;
+    if (req.file) data.profileImage = fileUrl(req.file);
     res.json(await Testimonial.findByIdAndUpdate(req.params.id, data, { new: true }));
   } catch (e) { res.status(500).json({ message: e.message }); }
 };
@@ -350,7 +351,7 @@ exports.updateBrandSettings = async (req, res) => {
     const data = {};
     const fields = ['brandName','phone','email','location','instagram','whatsapp','facebook','youtube','linkedin'];
     fields.forEach(f => { if (req.body[f] !== undefined) data[f] = req.body[f]; });
-    if (req.file) data.logo = '/uploads/' + req.file.filename;
+    if (req.file) data.logo = fileUrl(req.file);
     let settings = await BrandSettings.findOne();
     if (!settings) {
       settings = await BrandSettings.create(data);

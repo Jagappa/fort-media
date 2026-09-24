@@ -1,3 +1,4 @@
+const { fileUrl } = require('../middleware/upload');
 const PortfolioProject = require('../models/PortfolioProject');
 
 // PUBLIC
@@ -41,8 +42,8 @@ exports.createProject = async (req, res) => {
     if (data.titleEn) data.title = { en: data.titleEn, kn: data.titleKn || '' };
     if (data.descEn) data.description = { en: data.descEn, kn: data.descKn || '' };
     if (req.files) {
-      if (req.files.coverImage) data.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
-      if (req.files.images) data.images = req.files.images.map(f => `/uploads/${f.filename}`);
+      if (req.files.coverImage) data.coverImage = fileUrl(req.files.coverImage[0]);
+      if (req.files.images) data.images = req.files.images.map(f => fileUrl(f));
     }
     const project = await PortfolioProject.create(data);
     res.status(201).json(project);
@@ -55,10 +56,10 @@ exports.updateProject = async (req, res) => {
     if (data.titleEn !== undefined) data.title = { en: data.titleEn, kn: data.titleKn || '' };
     if (data.descEn !== undefined) data.description = { en: data.descEn, kn: data.descKn || '' };
     if (req.files) {
-      if (req.files.coverImage) data.coverImage = `/uploads/${req.files.coverImage[0].filename}`;
+      if (req.files.coverImage) data.coverImage = fileUrl(req.files.coverImage[0]);
       if (req.files.images) {
         const existing = JSON.parse(data.existingImages || '[]');
-        data.images = [...existing, ...req.files.images.map(f => `/uploads/${f.filename}`)];
+        data.images = [...existing, ...req.files.images.map(f => fileUrl(f))];
       }
     }
     const project = await PortfolioProject.findByIdAndUpdate(req.params.id, data, { new: true });

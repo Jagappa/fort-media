@@ -1,7 +1,7 @@
 import { useEffect, useState, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { adminAPI } from '../../api';
+import { adminAPI, mediaUrl } from '../../api';
 import toast from 'react-hot-toast';
 
 /* A service is now just: two names, an image, and an order.
@@ -60,7 +60,7 @@ export default function AdminServices() {
       displayOrder: svc.displayOrder || 0,
     });
     setFile(null);
-    setPreview(svc.mainImage || '');   // existing image, until a new one is picked
+    setPreview(svc.mainImage ? mediaUrl(svc.mainImage) : '');   // existing image, until a new one is picked
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -195,7 +195,7 @@ export default function AdminServices() {
               <td>{s.displayOrder}</td>
               <td>
                 {s.mainImage ? (
-                  <img src={s.mainImage} alt="" style={{ width: 64, height: 64, objectFit: 'cover', border: '1px solid var(--border)' }} />
+                  <img src={mediaUrl(s.mainImage)} alt="" style={{ width: 64, height: 64, objectFit: 'cover', border: '1px solid var(--border)' }} />
                 ) : (
                   <span style={{ fontSize: 11, color: 'var(--red)' }}>No image</span>
                 )}

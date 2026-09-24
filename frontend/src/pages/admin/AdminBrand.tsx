@@ -1,6 +1,6 @@
 import { useEffect, useState, FormEvent } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { adminAPI } from '../../api';
+import { adminAPI, mediaUrl } from '../../api';
 import toast from 'react-hot-toast';
 
 export default function AdminBrand() {
@@ -44,7 +44,7 @@ export default function AdminBrand() {
           <div style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: 28 }}>
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, marginBottom: 20, letterSpacing: '.06em' }}>LOGO</h3>
             <div style={{ width: '100%', aspectRatio: '1', background: 'var(--bg)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16, padding: 28 }}>
-              <img src={preview || brand.logo || '/fort-media-logo.png'} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+              <img src={preview || mediaUrl(brand.logo) || '/fort-media-logo.png'} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} />
             </div>
             <input type="file" accept="image/*" onChange={handleLogoChange} style={{ fontSize: 13, color: 'var(--gray)', marginBottom: 8 }} />
             <p style={{ fontSize: 11, color: 'var(--gray-dark)', lineHeight: 1.5 }}>Upload a new logo. It will replace the logo across the entire website.</p>

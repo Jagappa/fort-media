@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { publicAPI } from '../../api';
+import { publicAPI, mediaUrl } from '../../api';
 import { useLang } from '../../context/LanguageContext';
 
 const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => {
@@ -23,7 +23,7 @@ export default function ServiceDetailPage() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  const logoUrl = brand.logo || '/fort-media-logo.png';
+  const logoUrl = brand.logo ? mediaUrl(brand.logo) : '/fort-media-logo.png';
   if (!service) return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)', fontFamily: 'var(--font-display)', fontSize: 24 }}>LOADING...</div>;
 
   // Check if this is Website Development (shows projects instead of videos)
@@ -47,7 +47,7 @@ export default function ServiceDetailPage() {
         textAlign: 'center', position: 'relative', overflow: 'hidden', minHeight: 400, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       }}>
         {service.mainImage && (
-          <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${service.mainImage})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: .15 }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${mediaUrl(service.mainImage)})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: .15 }} />
         )}
         <div style={{ position: 'relative', zIndex: 2 }}>
           <FadeIn><div className="section-label" style={{ justifyContent: 'center' }}>SERVICE</div></FadeIn>
@@ -73,7 +73,7 @@ export default function ServiceDetailPage() {
                   <FadeIn key={v._id} delay={i * .08}>
                     <div style={{ background: 'var(--card)', border: '1px solid var(--border)', overflow: 'hidden' }}>
                       {v.videoFile && <div style={{ width: '100%', aspectRatio: '16/9', background: '#000' }}>
-                        <video src={v.videoFile} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <video src={mediaUrl(v.videoFile)} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>}
                       <div style={{ padding: 20 }}>
                         <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 18, marginBottom: 8 }}>{typeof v.title === 'object' ? v.title.en : v.title}</h3>
@@ -100,7 +100,7 @@ export default function ServiceDetailPage() {
                       onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = 'var(--red)'}
                       onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'}>
                       <div style={{ width: '100%', aspectRatio: '9/16', background: '#000', maxHeight: 500 }}>
-                        <video src={v.videoFile} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <video src={mediaUrl(v.videoFile)} controls style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       </div>
                       <div style={{ padding: '16px 18px' }}>
                         <div style={{ fontSize: 15, fontWeight: 600, letterSpacing: '.02em' }}>{typeof v.title === 'object' ? (v.title.en || 'Video') : (v.title || 'Video')}</div>

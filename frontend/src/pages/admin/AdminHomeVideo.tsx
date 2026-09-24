@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { adminAPI } from '../../api';
+import { adminAPI, mediaUrl } from '../../api';
 import toast from 'react-hot-toast';
 
 export default function AdminHomeVideo() {
@@ -66,7 +66,7 @@ export default function AdminHomeVideo() {
           {videos.map(v => (
             <tr key={v._id}>
               <td>
-                {v.videoFile && <video src={v.videoFile} style={{ width: 120, height: 68, objectFit: 'cover', background: '#000' }} />}
+                {v.videoFile && <video src={mediaUrl(v.videoFile)} style={{ width: 120, height: 68, objectFit: 'cover', background: '#000' }} />}
               </td>
               <td style={{ color: 'var(--white)' }}>{v.title || 'Untitled'}</td>
               <td><span className={`badge ${v.isActive ? 'badge-green' : 'badge-gray'}`}>{v.isActive ? 'Active' : 'Inactive'}</span></td>

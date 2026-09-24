@@ -1,3 +1,4 @@
+const { fileUrl } = require('../middleware/upload');
 const Service = require('../models/Service');
 const ServiceVideo = require('../models/ServiceVideo');
 
@@ -80,7 +81,7 @@ exports.createService = async (req, res) => {
     const service = await Service.create({
       name: { en: nameEn, kn: nameKn },
       slug: await uniqueSlug(nameEn),
-      mainImage: '/uploads/' + req.file.filename,
+      mainImage: fileUrl(req.file),
       displayOrder: Number(req.body.displayOrder) || 0,
       isActive: req.body.isActive !== 'false',
       isFeatured: req.body.isFeatured === 'true',
@@ -111,7 +112,7 @@ exports.updateService = async (req, res) => {
     if (req.body.displayOrder !== undefined) update.displayOrder = Number(req.body.displayOrder) || 0;
     if (req.body.isActive !== undefined) update.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     if (req.body.isFeatured !== undefined) update.isFeatured = req.body.isFeatured === 'true' || req.body.isFeatured === true;
-    if (req.file) update.mainImage = '/uploads/' + req.file.filename;
+    if (req.file) update.mainImage = fileUrl(req.file);
 
     const service = await Service.findByIdAndUpdate(req.params.id, update, { new: true });
     if (!service) return res.status(404).json({ message: 'Service not found' });
@@ -142,7 +143,7 @@ exports.addServiceVideo = async (req, res) => {
       service: req.params.serviceId,
       title: { en: req.body.titleEn || req.body.title || 'Untitled', kn: req.body.titleKn || '' },
       description: { en: req.body.descEn || '', kn: req.body.descKn || '' },
-      videoFile: '/uploads/' + req.file.filename,
+      videoFile: fileUrl(req.file),
       videoType: 'upload',
       displayOrder: Number(req.body.displayOrder) || 0,
       isActive: true,
@@ -162,7 +163,7 @@ exports.updateServiceVideo = async (req, res) => {
     if (req.body.descEn !== undefined) update.description = { en: req.body.descEn, kn: req.body.descKn || '' };
     if (req.body.isActive !== undefined) update.isActive = req.body.isActive === 'true' || req.body.isActive === true;
     if (req.body.displayOrder !== undefined) update.displayOrder = Number(req.body.displayOrder);
-    if (req.file) update.videoFile = '/uploads/' + req.file.filename;
+    if (req.file) update.videoFile = fileUrl(req.file);
     const video = await ServiceVideo.findByIdAndUpdate(req.params.videoId, update, { new: true });
     if (!video) return res.status(404).json({ message: 'Video not found' });
     res.json(video);
